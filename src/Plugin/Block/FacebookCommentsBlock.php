@@ -99,6 +99,15 @@ class FacebookCommentsBlock extends BlockBase {
   }
 
   /**
+   * isPercentage
+   * test if the given string is an percentage string
+   *
+   * @param string String to be tested against
+   * @return boolean Boolean if the string is a percentage string or not
+   */
+  private static function isPercentage($string) {                                                                          if (!preg_match('/^([\d]+)%$/', $string, $matches)) {                                                                    return false;                                                                                                        }                                                                                                                      return ($matches[1] <= 100);                                                                                         }
+
+  /**
    * {@inheritdoc}
    */
   public function blockValidate($form, FormStateInterface $form_state) {
@@ -115,7 +124,7 @@ class FacebookCommentsBlock extends BlockBase {
     }
 
     $width = $form_state->getValue(array('facebook_comments_settings', 'facebook_comments_block_settings_width'));
-    if (!is_numeric($width)) {
+    if (!is_numeric($width) && !self::isPercentage($width)) {
      drupal_set_message($this->t('Width must be a valid number.'), 'error');
      $form_state->setErrorByName('facebook_comments_block_settings_domain', $this->t('Width must be a valid number.'));
     }
